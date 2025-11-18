@@ -41,5 +41,5 @@ conda activate HSSE
 
 # Git Repo klonen
 git clone https://github.com/Z3PP1X/HSSE_Webpage.git /backend
-cd /backend
-git checkout "${HSSE_VERSION:-main}"
+cd /backend/backend
+git checkout "${HSSE_VERSION:-v1_stable}"

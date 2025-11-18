@@ -51,8 +51,8 @@ RUN apt update && \
 
 ### Stage 2: Install HSSE Backend
 WORKDIR /
-ARG HSSE_VERSION
-ARG PYTHON_VERSION
+ARG HSSE_VERSION=v1_stable
+ENV HSSE_VERSION=$HSSE_VERSION
 COPY --chmod=755 build/install.sh /install.sh
 RUN /install.sh && rm /install.sh
 ENV PATH="/opt/conda/bin:$PATH"

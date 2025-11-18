@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -e
+cd /backend/backend
 /opt/conda/envs/HSSE/bin/python manage.py migrate
 /opt/conda/envs/HSSE/bin/python manage.py collectstatic --noinput
 

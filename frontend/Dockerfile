@@ -20,15 +20,20 @@ COPY /build/environment.prod.ts ./src/environments/environment.prod.ts
 RUN npm install && \
     npm install -g @angular/cli
 
-CMD ["sleep", "infinity"]
+COPY /build/angular.json .
 
+RUN ng build frontend --configuration=production --output-path=./dist
 
-#RUN ng build frontend --configuration=production --output-path=./dist
+#CMD ["npm", "start", "--", "--host", "0.0.0.0"]
+
+#EXPOSE 4200
 
 # === Stage 2: PRODUKTION
-#FROM nginx:alpine
+FROM nginx:alpine
 
-#COPY --from=builder /app/HSSE_Webpage_FE/dist/your-project-name/browser /usr/share/nginx/html
+COPY --from=builder /app/HSSE_Webpage_FE/frontend/dist/browser /usr/share/nginx/html
 
-#EXPOSE 80
+EXPOSE 80
+
+
 

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://api.yourproduction.com',
+  apiBaseUrl: '/api',
   features: {
     showDevelopmentModules: false,
     showStagingModules: false,

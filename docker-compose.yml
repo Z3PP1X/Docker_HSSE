@@ -43,7 +43,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/health || exit 1"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -56,11 +56,17 @@ services:
       args:
         - RELEASE_VERSION=${RELEASE_VERSION:-v1.0.0}
     container_name: hsse_frontend
-    expose:
-      - "80"
+    ports:
+      - "80:80"
     networks:
       - hsse_network
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q http://localhost/index.html -O /dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 5s
 
   nginx:
     build:
@@ -69,11 +75,11 @@ services:
     container_name: hsse_nginx
     ports:
       - "8441:80"
-      - "8443:443"
+      #- "8443:443"
     volumes:
       - static_volume:/backend/staticfiles:ro
       - media_volume:/backend/media:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
+     # - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
       - backend
       - frontend
@@ -81,7 +87,7 @@ services:
       - hsse_network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3

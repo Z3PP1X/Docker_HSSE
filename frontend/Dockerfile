@@ -1,32 +1,34 @@
-FROM nginx:alpine
+# === Stage 1: Build Angular Application ===
+FROM node:20-slim AS builder
 
-# Tools zum Download und Entpacken
-RUN apk add --no-cache curl unzip
+RUN apt-get update && \
+    apt-get install -y git && \
+    rm -rf /var/lib/apt/lists/*
 
-# Version/Release anpassen
-ARG RELEASE_VERSION=v1.0.0
-ENV ASSET_URL=https://github.com/Z3PP1X/HSSE_Webpage_FE/releases/download/${RELEASE_VERSION}/frontend.zip
+ARG RELEASE_VERSION=v1.0-stable
 
-# WICHTIG: Zuerst die nginx-Default-Seite komplett löschen
-RUN rm -rf /usr/share/nginx/html/*
+WORKDIR /app
 
-# In tmp arbeiten
-WORKDIR /tmp
+RUN git clone https://github.com/Z3PP1X/HSSE_Webpage_FE.git
 
-# Release herunterladen und entpacken
-RUN curl -L $ASSET_URL -o frontend.zip && \
-    unzip frontend.zip && \
-    cp -r frontend/browser/* /usr/share/nginx/html/
+WORKDIR /app/HSSE_Webpage_FE/frontend
 
-# Aufräumen
-RUN rm -rf /tmp/*
+RUN git checkout ${RELEASE_VERSION}
 
-# Nginx Config kopieren (NACH dem Löschen der Default-Files)
-RUN rm -f /etc/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf.bak
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY /build/environment.prod.ts ./src/environments/environment.prod.ts
 
-WORKDIR /usr/share/nginx/html
+RUN npm install && \
+    npm install -g @angular/cli
 
-EXPOSE 80
+CMD ["sleep", "infinity"]
 
-CMD ["nginx", "-g", "daemon off;"]
+
+#RUN ng build frontend --configuration=production --output-path=./dist
+
+# === Stage 2: PRODUKTION
+#FROM nginx:alpine
+
+#COPY --from=builder /app/HSSE_Webpage_FE/dist/your-project-name/browser /usr/share/nginx/html
+
+#EXPOSE 80
+

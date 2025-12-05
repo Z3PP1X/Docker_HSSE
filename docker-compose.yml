@@ -56,8 +56,6 @@ services:
       args:
         - RELEASE_VERSION=${RELEASE_VERSION:-v1.0.0}
     container_name: hsse_frontend
-    ports:
-      - "80:80"
     networks:
       - hsse_network
     restart: unless-stopped

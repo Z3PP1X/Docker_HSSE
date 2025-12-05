@@ -75,11 +75,12 @@ services:
     container_name: hsse_nginx
     ports:
       - "8441:80"
-      #- "8443:443"
+      - "8443:443"
     volumes:
       - static_volume:/backend/staticfiles:ro
       - media_volume:/backend/media:ro
-     # - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/.htpasswd:/etc/nginx/htpasswd/.htpasswd:ro
     depends_on:
       - backend
       - frontend

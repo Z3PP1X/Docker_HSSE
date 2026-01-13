@@ -54,7 +54,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - RELEASE_VERSION=${RELEASE_VERSION:-v1.0.0}
+        - RELEASE_VERSION=${RELEASE_VERSION:-v1.1.0}
     container_name: hsse_frontend
     networks:
       - hsse_network
@@ -70,7 +70,7 @@ services:
     build:
       context: ./nginx
       dockerfile: Dockerfile
-    container_name: hsse_nginx
+    container_name: hsse_nging
     ports:
       - "80:80"
       - "443:443"
@@ -84,6 +84,7 @@ services:
       - frontend
     networks:
       - hsse_network
+      - shared_reverse_proxy_net
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
@@ -107,7 +108,7 @@ services:
     container_name: portainer
     restart: unless-stopped
     ports:
-      - "9000:9000"
+      - "6950:6950"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
@@ -127,5 +128,5 @@ volumes:
 networks:
   hsse_network:
     driver: bridge
-
-
+  shared_reverse_proxy_net:
+    external: true

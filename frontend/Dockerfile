@@ -5,7 +5,7 @@ RUN apt-get update && \
     apt-get install -y git && \
     rm -rf /var/lib/apt/lists/*
 
-ARG RELEASE_VERSION=v1.0-stable
+ARG RELEASE_VERSION=main
 
 WORKDIR /app
 

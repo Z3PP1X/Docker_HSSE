@@ -15,7 +15,7 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -43,7 +43,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/health/ || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -54,13 +54,13 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - RELEASE_VERSION=${RELEASE_VERSION:-v1.1.0}
+        - GIT_BRANCH=${GIT_BRANCH:-main}
     container_name: hsse_frontend
     networks:
       - hsse_network
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget -q http://localhost/index.html -O /dev/null || exit 1"]
+      test: [ "CMD-SHELL", "wget -q --spider http://localhost/ || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -87,7 +87,7 @@ services:
       - shared_reverse_proxy_net
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost/health || exit 1"]
+      test: [ "CMD-SHELL", "curl -f http://localhost/health || exit 1" ]
       interval: 30s
       timeout: 10s
       retries: 3

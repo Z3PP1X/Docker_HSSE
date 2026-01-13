@@ -84,7 +84,6 @@ services:
       - frontend
     networks:
       - hsse_network
-      - shared_reverse_proxy_net
     restart: unless-stopped
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost/health || exit 1" ]
@@ -128,5 +127,3 @@ volumes:
 networks:
   hsse_network:
     driver: bridge
-  shared_reverse_proxy_net:
-    external: true
